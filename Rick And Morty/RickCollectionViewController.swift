@@ -10,6 +10,13 @@ let ricks = [
 ]
 
 class RickCollectionViewController: UICollectionViewController {
+    let datasource: Datasource
+
+    required init?(coder aDecoder: NSCoder) {
+        self.datasource = Datasource(items: ricks)
+        super.init(coder: aDecoder)
+    }
+
     override func viewDidLoad() {
         self.title = "Rick"
 
@@ -19,7 +26,7 @@ class RickCollectionViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ricks.count
+        return datasource.itemCount
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -28,10 +35,9 @@ class RickCollectionViewController: UICollectionViewController {
             return cell
         }
 
-        let rick = ricks[indexPath.row]
-        rickCell.imageView.image = UIImage(named: rick.image)
-        rickCell.nameLabel.text = rick.name
-        rickCell.descriptionLabel.text = rick.description
+
+        let cellPresentable = datasource.presentable(at: indexPath)
+        rickCell.configure(with: cellPresentable)
 
         return rickCell
     }
